@@ -1,4 +1,4 @@
-package com.zhy.treedepthwidth;
+package com.zhy.tree;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
