@@ -140,4 +140,30 @@ public class TestString {
         return count;
     }
 
+    //查找字符串中包含给定串的最短字符串
+    public String findShortestString(char[] s, char[] t) {
+        int[] map = new int[128];
+        for (char ch : t) {
+            ++map[ch];
+        }
+        int counter = t.length;
+        int begin = 0, end = 0;
+        int head = 0;
+        int len = Integer.MAX_VALUE;
+        while (end < s.length) {
+            //右边加，当这个字符是滑动窗口缺少的字符时，计数器减一
+            if (map[s[end++]] -- > 0) --counter;
+            while ((counter == 0)) {
+                if (end - begin < len) {
+                    len = end - begin;
+                    head = begin;
+                }
+                //左边减，当这个字符是滑动窗口不缺也不富余的字符时，计数器加一
+                if (map[s[begin++]] ++ == 0) ++counter;
+            }
+        }
+        if (len == Integer.MAX_VALUE) return "";
+        return String.valueOf(s).substring(head, len);
+    }
+
 }
