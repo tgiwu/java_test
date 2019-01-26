@@ -140,4 +140,15 @@ public class TestString {
         return count;
     }
 
+    private void testEquals() {
+
+        String s = new String("abc");
+        char[] c = {'a', 'b', 'c'};
+        System.out.println( s.equals(c));
+
+        String s1 = "abc";
+        System.out.println(s1.equals(c));
+
+        System.out.println(s1.equals(s));
+    }
 }
