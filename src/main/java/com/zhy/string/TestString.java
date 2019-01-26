@@ -140,7 +140,6 @@ public class TestString {
         return count;
     }
 
-<<<<<<< HEAD
     private void testEquals() {
 
         String s = new String("abc");
@@ -152,7 +151,6 @@ public class TestString {
 
         System.out.println(s1.equals(s));
     }
-=======
     //查找字符串中包含给定串的最短字符串
     public String findShortestString(char[] s, char[] t) {
         int[] map = new int[128];
@@ -178,6 +176,4 @@ public class TestString {
         if (len == Integer.MAX_VALUE) return "";
         return String.valueOf(s).substring(head, len);
     }
-
->>>>>>> 8f4dbbaaeadea53866577813f4ea2d068bd3e746
 }
