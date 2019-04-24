@@ -7,11 +7,12 @@ public class TestTryCatch {
 
     public int testTryReturn() {
         try {
-            throw new Exception("1");
-//            return 1;
+//            throw new Exception("1");
+            return 1;
         } catch (Exception e) {
             return 2;
         } finally {
+            System.out.println("It's finally");
 //            return 3;
         }
     }

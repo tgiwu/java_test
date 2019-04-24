@@ -19,7 +19,9 @@ public class TestLinkedList {
         Node now = node;
         while (now != null) {
             Node next = now.next;
+            //当前node指向前一个元素
             now.next = prev;
+            //指针前移
             prev = now;
             now = next;
         }
