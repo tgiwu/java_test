@@ -16,6 +16,12 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     implementation "io.reactivex.rxjava2:rxjava:2.2.4"
+    // https://mvnrepository.com/artifact/org.jboss.arquillian/arquillian-junit
+//    testCompile group: 'org.jboss.arquillian', name: 'arquillian-junit', version: '1.0.0.Alpha5'
+    // https://mvnrepository.com/artifact/org.jboss.arquillian.junit/arquillian-junit-container
+    testCompile group: 'org.jboss.arquillian.junit', name: 'arquillian-junit-container', version: '1.4.1.Final'
+
+
 }
 compileKotlin {
     kotlinOptions {

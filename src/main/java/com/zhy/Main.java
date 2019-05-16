@@ -1,5 +1,6 @@
 package com.zhy;
 
+import java.lang.reflect.Field;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.Clock;
@@ -20,6 +21,26 @@ public class Main {
         current = current / 1000 * 1000;
         System.out.println(current);
 
+
+        Integer a = 1;
+        Integer b = 2;
+        System.out.println(" a = " + a + " b = " + b);
+        swap(a, b);
+        System.out.println(" a = " + a + " b = " + b);
+    }
+    private static void swap(Integer a, Integer b) {
+
+        int temp = a;
+        try {
+            Field field = Integer.class.getDeclaredField("value");
+            field.setAccessible(true);
+            field.setInt(a, b);
+            field.setInt(b, temp);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
 
