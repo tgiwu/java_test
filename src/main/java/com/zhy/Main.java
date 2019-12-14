@@ -1,6 +1,7 @@
 package com.zhy;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.Clock;
@@ -39,6 +40,17 @@ public class Main {
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void reflect() {
+        try {
+            Class<?> clazz = Class.forName("java.lang.String");
+            Class<?> instance = (Class<?>) clazz.newInstance();
+            Method method = clazz.getMethod("replace", String.class, String.class);
+            Object o = method.invoke(instance, "a", "b");
+        }catch (Exception e) {
             e.printStackTrace();
         }
     }

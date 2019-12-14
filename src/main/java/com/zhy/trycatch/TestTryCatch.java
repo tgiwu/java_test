@@ -7,6 +7,7 @@ public class TestTryCatch {
 
     public int testTryReturn() {
         try {
+            System.out.println("go");
 //            throw new Exception("1");
             return 1;
         } catch (Exception e) {
