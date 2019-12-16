@@ -2,9 +2,11 @@ package com.zhy.coroutines
 
 import com.zhy.extensions.log
 import kotlinx.coroutines.*
+import java.io.IOError
+import java.io.IOException
 import java.lang.ArithmeticException
-import java.lang.AssertionError
 import java.lang.IndexOutOfBoundsException
+import kotlin.AssertionError
 
 fun main() {
     with(CoroutineHandleException()) {
@@ -15,6 +17,15 @@ fun main() {
         cancelException()
         "==================".log()
         cancelByException()
+        "==================".log()
+        exceptionFirstWin()
+        "==================".log()
+        supervisorJobT()
+        "==================".log()
+        supervisorScopeT()
+        "==================".log()
+        exceptionInSupervisorScope()
+
     }
 }
 class CoroutineHandleException {
@@ -103,4 +114,87 @@ class CoroutineHandleException {
         }
         job.join()
     }
+
+    fun exceptionFirstWin() = runBlocking {
+        val handler = CoroutineExceptionHandler{_, exception ->
+            "Caught $exception with suppressed ${exception.suppressed!!.contentDeepToString()}".log()
+        }
+
+        val job = GlobalScope.launch(handler) {
+            launch {
+                try {
+                    delay(Long.MAX_VALUE)
+                } finally {
+                    throw ArithmeticException()
+                }
+            }
+            launch {
+                delay(100)
+                throw IOException()
+            }
+            delay(Long.MAX_VALUE)
+        }
+        job.join()
+    }
+
+    fun supervisorJobT() = runBlocking {
+        val supervisor = SupervisorJob()
+        with(CoroutineScope(coroutineContext + supervisor)) {
+            val firstChild = launch(CoroutineExceptionHandler {_,_ ->}) {
+                "First child is failing".log()
+                throw AssertionError("First child is cancelled")
+            }
+
+            val secondChild = launch {
+                firstChild.join()
+                "First child is cancelled: ${firstChild.isCancelled}, but second one is still active".log()
+                try {
+                    delay(Long.MAX_VALUE)
+                }finally {
+                    "Second child is cancelled because supervisor is cancelled".log()
+                }
+            }
+
+            firstChild.join()
+            "Cancelling supervisor".log()
+            supervisor.cancel()
+            secondChild.join()
+        }
+    }
+
+    fun supervisorScopeT() = runBlocking {
+        try {
+            supervisorScope {
+                launch {
+                    try {
+                        "Child is sleeping".log()
+                        delay(Long.MAX_VALUE)
+                    } finally {
+                        "Child is cancelled".log()
+                    }
+                }
+                yield()
+                "Throwing exception from scop".log()
+                throw AssertionError()
+            }
+        } catch (e : AssertionError) {
+            "Caught assertion error".log()
+        }
+    }
+
+    fun exceptionInSupervisorScope() = runBlocking {
+        val handler = CoroutineExceptionHandler { _, throwable ->
+            "Caught $throwable".log()
+        }
+
+        supervisorScope {
+            launch(handler) {
+                "Child throws an exception".log()
+                throw AssertionError()
+            }
+            "Scope is completing".log()
+        }
+        "Scope is completed".log()
+    }
+
 }
